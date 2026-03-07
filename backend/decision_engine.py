@@ -11,7 +11,7 @@ def generate_decision(probabilities, indicators, risk_preference):
         "high": 50.0
     }
     
-    buy_threshold = thresholds.get(risk_preference.lower(), 60.0)
+    buy_threshold = thresholds.get(risk_preference.lower(), 60.0) - 15.0 # Relaxed threshold
     
     rsi = indicators.get("RSI", 50)
     macd = indicators.get("MACD", 0)
@@ -25,11 +25,11 @@ def generate_decision(probabilities, indicators, risk_preference):
     risk_score = min(max((volatility * 2) + (100 - min(buy_prob, avoid_prob)), 0), 100)
     
     # Logical check
-    # Buy: high prob, RSI < 70 (not overbought), MACD bullish (above signal or positive)
-    if buy_prob >= buy_threshold and rsi < 70 and macd > macd_signal:
+    # Buy: high prob, and RSI isn't completely exhausted (>80)
+    if buy_prob >= buy_threshold and rsi < 80 and macd > -0.5:
         recommendation = "BUY"
         confidence = buy_prob
-    elif avoid_prob >= buy_threshold and rsi > 30 and macd < macd_signal:
+    elif avoid_prob >= buy_threshold and rsi > 20 and macd < 0.5:
         recommendation = "AVOID"
         confidence = avoid_prob
     else:
@@ -62,6 +62,26 @@ def generate_decision(probabilities, indicators, risk_preference):
         explanation_lines.append("Volatility is low, meaning sideways or slow price movement is expected.")
         
     explanation = " ".join(explanation_lines)
+    
+    # Calculate Targets based on ATR
+    # For a risk-reward ratio of ~ 1:2
+    target_distance = atr * 2
+    sl_distance = atr * 1.5
+    
+    # Provide targets even for HOLD to show breakout levels
+    if recommendation == "BUY":
+        entry = price
+        tp = price + target_distance
+        sl = price - sl_distance
+    elif recommendation == "AVOID":
+        entry = price
+        tp = price - target_distance
+        sl = price + sl_distance
+    else:
+        # HOLD targets are breakout zones
+        entry = price
+        tp = price + atr
+        sl = price - atr
 
     return {
         "recommendation": recommendation,
@@ -69,6 +89,9 @@ def generate_decision(probabilities, indicators, risk_preference):
         "risk_score": round(risk_score, 1),
         "trend": trend,
         "explanation": explanation,
+        "suggested_entry": round(entry, 4),
+        "stop_loss": round(sl, 4),
+        "take_profit": round(tp, 4),
         "indicator_summary": {
             "RSI": "Overbought" if rsi > 70 else "Oversold" if rsi < 30 else "Neutral",
             "MACD": "Bullish crossover" if macd > 0 else "Bearish crossover" if macd < 0 else "Neutral",

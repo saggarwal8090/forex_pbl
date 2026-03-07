@@ -106,12 +106,38 @@ const PredictionCard = ({ recommendationInfo }) => {
                     </div>
                 </div>
 
+                <div className="h-px w-full bg-slate-700/50 my-2"></div>
+
+                {/* Price Action Targets */}
+                {(recommendationInfo.stop_loss !== undefined) && (
+                    <div className="flex-1 flex flex-col">
+                        <h4 className="text-xs font-bold uppercase text-slate-500 tracking-widest mb-4">Trade Targets</h4>
+
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm font-semibold text-slate-400 flex items-center gap-2">Entry Price</span>
+                                <span className="font-mono text-slate-200 font-bold tracking-wider">{recommendationInfo.suggested_entry?.toFixed(4)}</span>
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm font-semibold text-emerald-400 flex items-center gap-2">Take Profit</span>
+                                <span className="font-mono text-emerald-400 font-bold tracking-wider">{recommendationInfo.take_profit?.toFixed(4)}</span>
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm font-semibold text-rose-400 flex items-center gap-2">Stop Loss</span>
+                                <span className="font-mono text-rose-400 font-bold tracking-wider">{recommendationInfo.stop_loss?.toFixed(4)}</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* Global Trend summary bottom */}
                 <div className="mt-auto bg-slate-900/50 border border-slate-700/40 rounded-xl p-4 flex items-center justify-between shadow-inner">
                     <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Engine Analysis:</span>
                     <span className={`text-sm font-bold uppercase py-1 px-3 rounded-md bg-slate-800 ${trend === 'Bullish' ? 'text-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.1)]' :
-                            trend === 'Bearish' ? 'text-rose-400 shadow-[0_0_10px_rgba(251,113,133,0.1)]' :
-                                'text-slate-300'
+                        trend === 'Bearish' ? 'text-rose-400 shadow-[0_0_10px_rgba(251,113,133,0.1)]' :
+                            'text-slate-300'
                         }`}>
                         {trend} TREND
                     </span>

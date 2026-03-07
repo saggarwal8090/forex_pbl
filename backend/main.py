@@ -174,7 +174,10 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
                     "indicator_summary": decision["indicator_summary"],
                     "probabilities": probs,
                     "indicators": latest_features,
-                    "tracker_stats": tracker.get_stats()
+                    "tracker_stats": tracker.get_stats(),
+                    "suggested_entry": decision.get("suggested_entry"),
+                    "stop_loss": decision.get("stop_loss"),
+                    "take_profit": decision.get("take_profit")
                 }
                 
                 await websocket.send_json(response_payload)
