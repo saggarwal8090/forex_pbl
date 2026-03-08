@@ -120,12 +120,16 @@ const PredictionCard = ({ recommendationInfo }) => {
                             </div>
 
                             <div className="flex items-center justify-between">
-                                <span className="text-sm font-semibold text-emerald-400 flex items-center gap-2">Take Profit</span>
+                                <span className="text-sm font-semibold text-emerald-400 flex items-center gap-2">
+                                    {(recommendation === "AVOID" || recommendation === "SELL") ? "Take Profit (Short)" : recommendation === "HOLD" ? "Upside Breakout" : "Take Profit"}
+                                </span>
                                 <span className="font-mono text-emerald-400 font-bold tracking-wider">{recommendationInfo.take_profit?.toFixed(4)}</span>
                             </div>
 
                             <div className="flex items-center justify-between">
-                                <span className="text-sm font-semibold text-rose-400 flex items-center gap-2">Stop Loss</span>
+                                <span className="text-sm font-semibold text-rose-400 flex items-center gap-2">
+                                    {(recommendation === "AVOID" || recommendation === "SELL") ? "Stop Loss (Short)" : recommendation === "HOLD" ? "Downside Breakout" : "Stop Loss"}
+                                </span>
                                 <span className="font-mono text-rose-400 font-bold tracking-wider">{recommendationInfo.stop_loss?.toFixed(4)}</span>
                             </div>
                         </div>
