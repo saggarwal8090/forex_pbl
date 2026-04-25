@@ -30,7 +30,7 @@ const Dashboard = () => {
         );
     };
 
-    const WS_URL = import.meta.env.VITE_WS_URL || `ws://${window.location.hostname}:8000/ws/dashboard1`;
+    const WS_URL = import.meta.env.VITE_WS_URL || `ws://${window.location.hostname}:8080/ws/dashboard1`;
     const { sendMessage, lastMessage, readyState } = useWebSocket(WS_URL, {
         shouldReconnect: () => true,
         reconnectAttempts: 10,
